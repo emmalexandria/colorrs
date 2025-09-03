@@ -100,8 +100,8 @@ that this is comparing the `.toml` format of `colorrs` to the shell scripts of `
 
 |application|random|arch|alpha|
 |--------------|------|----|-------|
-|shell-color-scripts|391.49ms|33.78ms|29.93ms|
-|colorrs|31.31ms|8.82ms|9.52ms|
+|shell-color-scripts|~400ms|~30ms|!30ms|
+|colorrs|~30ms|~9ms|~9ms|
 
 Obviously for printing a specific script, both are very fast. However, for random scripts `colorrs` is significantly faster, and doesn't
 display the notable delay of `shell-color-scripts`.
