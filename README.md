@@ -76,14 +76,16 @@ I'll work out some escaping.
 
 ## Advantages 
 ### Speed
-`colorrs` is faster than `shell-color-scripts`. 
+`colorrs` is much faster than `shell-color-scripts`, especially in selecting a random pattern. For a specific pattern, both are 
+faster than human reaction time, but hey, `colorrs` is still roughly 4x faster even if you won't notice.
 
-Here are some quick comparative benchmark results of execution time measured with the `time` command (on an M4 Macbook Air).
+Here are some quick comparative benchmark results of execution time measured with the `time` command (on an M4 Macbook Air). Please note 
+that this is comparing the `.toml` format of `colorrs` to the shell scripts of `shell-color-scripts`. 
 
 |application|random|arch|blocks2|
 |--------------|------|----|-------|
 |shell-color-scripts|391.49ms|33.78ms|32.62ms|
-|colorrs|31.31ms|24.31ms|22.93ms|
+|colorrs|31.31ms|8.82ms|22.93ms|
 
 Obviously for printing a specific script, both are very fast. However, for random scripts `colorrs` is significantly faster, and doesn't 
 display the notable delay of `shell-color-scripts`.
