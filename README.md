@@ -55,9 +55,9 @@ A pattern file looks like so:
 # If for some bizarre reason your ASCII art needs to contain the characters '{red}', you can simply name your 
 # colour slightly differently. No need to mess around with escapes.
 pattern = """
-  {red}This will be in red{reset}{green}Hello{reset}
-{blue}This is blue
-      Indentation is preserved due to the multiline string! Feel free 
+  {red}This will be in red {blue}Hello{reset}
+{blue}{bold}This is blue and bold{reset}
+      {red}And this is back to red. Indentation is preserved due to the multiline string! Feel free 
 to just paste                  ASCII art in here
 """
 
@@ -67,6 +67,7 @@ to just paste                  ASCII art in here
 red = "31"
 # We can do a 256 color code by simply including the 256 color code marker:
 blue = "38;5;25"
+bold = "1"
 ```
 
 This TOML format was designed to be easy to use, and (vitally) fast to parse and apply. It's worth noting that `{reset}` is a built in "color" which 
