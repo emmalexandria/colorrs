@@ -90,7 +90,7 @@ I'll work out some escaping.
 ### Speed
 
 `colorrs` is much faster than `shell-color-scripts`, especially in selecting a random pattern. For a specific pattern, both are
-faster than human reaction time, but hey, `colorrs` is still roughly 4x faster even if you won't notice.
+faster than human reaction time, but hey, `colorrs` is still roughly 3-4x faster even if you won't notice.
 
 Here are some quick comparative benchmark results of execution time measured with the `time` command (on an M4 Macbook Air). Please note
 that this is comparing the `.toml` format of `colorrs` to the shell scripts of `shell-color-scripts`.
