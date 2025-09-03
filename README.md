@@ -107,7 +107,7 @@ Any pattern written in the `.toml` format *will* run on MacOS, Linux, and Window
 
 ## Disadvantages
 
-Maybe I'm just too biased towards my own work, but I don't think theres any disadvantage to using this over `shell-color-scripts`. The `.toml`
+Maybe I'm just too biased towards my own work, but I don't think there's any disadvantage to using this over `shell-color-scripts`. The `.toml`
 format does have a disadvantage however in that one cannot programatically repeat a string, so patterns showing multiple copies of the same
 ASCII art in different colours require more manual labour.
 
