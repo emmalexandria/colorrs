@@ -1,0 +1,9 @@
+pattern = """
+	Hello
+Hi there
+Whats going going
+		Stuff
+"""
+
+[colors]
+red = ""
