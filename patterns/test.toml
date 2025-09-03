@@ -1,9 +1,10 @@
 pattern = """
-	Hello
-Hi there
+ {red}Hello{reset}
+{green}Hi there
 Whats going going
 		Stuff
 """
 
 [colors]
-red = ""
+red = "31"
+green = "38;5;46"

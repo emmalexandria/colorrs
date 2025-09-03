@@ -3,6 +3,7 @@ use rand::seq::IndexedRandom;
 use std::{
     fmt::Display,
     path::{Path, PathBuf},
+    process::exit,
     str::FromStr,
 };
 
@@ -24,6 +25,11 @@ fn main() {
     let dir = matches
         .get_one::<PathBuf>("patterndir")
         .unwrap_or(&default_dir);
+
+    if !dir.exists() {
+        eprintln!("Pattern directory {} does not exist", dir.to_string_lossy());
+        exit(-1);
+    }
 
     if matches.get_flag("list") {
         list(dir);
@@ -68,6 +74,7 @@ fn build_cli() -> Command {
         .arg(
             Arg::new("patterndir")
                 .short('d')
+                .value_name("DIRECTORY")
                 .long("dir")
                 .help("Set a custom directory for pattern description files")
                 .value_parser(value_parser!(PathBuf)),
@@ -83,6 +90,12 @@ fn print(dir: &PathBuf, pattern: &String) {
 
     if let Some(f) = file {
         print_pattern(f);
+    } else {
+        eprintln!(
+            "Pattern file for {} not found in {}",
+            pattern,
+            dir.to_string_lossy()
+        );
     }
 }
 

@@ -1,9 +1,32 @@
 use std::{
     collections::HashMap,
+    fmt::Display,
     fs::{self, File},
     io::Read,
     path::{Path, PathBuf},
+    process::Stdio,
 };
+
+pub enum PatternErrorType {
+    InvalidShebang,
+    InvalidTOML,
+    FileDoesNotExist,
+    IOError,
+}
+
+pub struct PatternError {
+    e_type: PatternErrorType,
+    message: String,
+}
+
+impl PatternError {
+    fn new<S: ToString>(e_type: PatternErrorType, msg: S) -> Self {
+        Self {
+            e_type,
+            message: msg.to_string(),
+        }
+    }
+}
 
 use serde::{Deserialize, Serialize};
 
@@ -13,11 +36,29 @@ pub struct Pattern {
     pattern: String,
 }
 
-pub fn read_toml_pattern(path: &Path) -> Pattern {
-    let content = fs::read_to_string(path).unwrap();
-    let pat: Pattern = toml::from_str(&content).unwrap();
+impl Display for Pattern {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.draw())
+    }
+}
 
-    pat
+impl Pattern {
+    fn draw(&self) -> String {
+        let mut new_pattern = self.pattern.clone();
+
+        self.colors.iter().for_each(|(k, v)| {
+            let pattern = format!("{{{}}}", k);
+            new_pattern = new_pattern.replace(&pattern, &make_escape_code(v));
+        });
+
+        new_pattern = new_pattern.replace("{reset}", &make_escape_code("0"));
+
+        new_pattern
+    }
+}
+
+fn make_escape_code(inner: &str) -> String {
+    format!("\x1b[{inner}m")
 }
 
 pub fn get_pattern_dir() -> Option<PathBuf> {
@@ -27,8 +68,51 @@ pub fn get_pattern_dir() -> Option<PathBuf> {
     })
 }
 
-pub fn print_pattern(path: &Path) {
-    let pattern = read_toml_pattern(path);
+pub fn print_pattern(path: &Path) -> Result<(), PatternError> {
+    if path.is_file() {
+        if let Some(p) = path.extension()
+            && p == "toml"
+        {
+            print_toml_pattern(path);
+        } else {
+            print_shell_pattern(path);
+        }
+    } else {
+        return Err(PatternError::new(
+            PatternErrorType::FileDoesNotExist,
+            format!("Provided path {} is not a file", path.to_string_lossy()),
+        ));
+    }
 
-    println!("{}", pattern.pattern)
+    Ok(())
+}
+
+fn print_toml_pattern(path: &Path) -> Result<(), PatternError> {
+    let content = fs::read_to_string(path).map_err(|e| {
+        PatternError::new(
+            PatternErrorType::IOError,
+            format!("Error {} reading {}", e.to_string(), path.to_string_lossy()),
+        )
+    })?;
+
+    let pattern = toml::from_str::<Pattern>(&content).map_err(|e| {
+        PatternError::new(
+            PatternErrorType::InvalidTOML,
+            format!(
+                "TOML file {} invalid. Error: {}",
+                path.to_string_lossy(),
+                e.message()
+            ),
+        )
+    })?;
+
+    print!("{}", pattern.draw());
+
+    Ok(())
+}
+
+fn print_shell_pattern(path: &Path) -> Result<(), PatternError> {
+    let output = std::process::Command::new(path).output().unwrap();
+    println!("{}", String::from_utf8_lossy(&output.stdout));
+    Ok(())
 }
