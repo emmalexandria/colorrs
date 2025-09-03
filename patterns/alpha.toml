@@ -1,0 +1,23 @@
+pattern = """
+{boldon}{redfbright}   ██████  {reset} {boldon}{greenfbright}██████   {reset}{boldon}{yellowfbright}  ██████{reset} {boldon}{bluefbright}██████  {reset} {boldon}{purplefbright}  ██████{reset} {boldon}{cyanfbright}  ███████{reset}
+{boldon}{redfbright}   ████████{reset} {boldon}{greenfbright}██    ██ {reset}{boldon}{yellowfbright}██      {reset} {boldon}{bluefbright}██    ██{reset} {boldon}{purplefbright}██████  {reset} {boldon}{cyanfbright}█████████{reset}
+{redf}   ██  ████{reset} {greenf}██  ████ {reset}{yellowf}████    {reset} {bluef}████  ██{reset} {purplef}████    {reset} {cyanf}█████    {reset}
+{redf}   ██    ██{reset} {greenf}██████   {reset}{yellowf}████████{reset} {bluef}██████  {reset} {purplef}████████{reset} {cyanf}██       {reset} 
+"""
+
+[colors]
+boldon = "1"
+
+redf = "31"
+greenf = "32"
+yellowf = "33"
+bluef = "34"
+purplef = "35"
+cyanf = "36"
+
+redfbright = "91"
+greenfbright = "92"
+yellowfbright = "93"
+bluefbright = "94"
+cyanfbright = "96"
+purplefbright = "95"

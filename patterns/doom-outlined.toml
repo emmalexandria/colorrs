@@ -1,0 +1,40 @@
+pattern = """
+{boldon}{yellowfbright}  ▓   ▓ ▓▓▓        ▓  ▓ ▓▓▓  ▓        ▓      ▓ ▓░   ░░▓  ▓▓    ▓  ▓▓     
+{boldon}{yellowfbright}▓▓{boldon}{yellowfbright}▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ░▓▓▓░▓▓▓▓▓▓▓▓░▓▒ ░░▓▓▓▓░▓▓▓▓░▓▓▓▓▓▓▓▓░▓▓▓▓░   ▓▓▓▓▓{boldon}{yellowfbright}▓▓▓  
+{boldon}{yellowfbright}  ▓▓{boldon}{bluefbright}▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓  ▓▓▓▓▓░{boldon}{yellowfbright}▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{bluefbright}▓▓▓▓░ ▓▓▓▓▓▓▓▓▓▓▓▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▓ ▓▓▓▓▓▓{boldon}{yellowfbright}▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{bluefbright}▓▓▓▒    ▓▓▓▓▒▓▓▓▓▓▓▓▓▓    ▓▓▓▓▓▓▓ ▓▓▓▓▓▓░    ▓▓░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓░▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{bluefbright}▓▓▓▓    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ▓▓▓▓░▓▓ ▓▓▓▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓   
+{boldon}{yellowfbright}  ▓▓{boldon}{bluefbright}▓▓▓▓▓    ▓▓▒▓▓░▓▓▓▓▓▓▓▓    ▓▓▓▓▓▓░ ▓░▓▓▓▓░    ▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓░░{boldon}{yellowfbright}▓▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{bluefbright}▓░▓▓    ▓▓▓░▓▓░▓▓▓▓▓░▓    ▓▓▓▓▓▓▓ ▓▓▓▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓▓░   
+{boldon}{yellowfbright}  ▓▓{boldon}{redfbright}▓▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ▓▓▓▓▓▓▓ ▓▓▓▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ▓▓▓▓▓▓▓ ▓▓▓▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓░   
+{boldon}{yellowfbright}  ▓▓{boldon}{redfbright}▓▓░▓▓    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ▓▓▓▓▓▓▓ ▓▓▓▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓▓▓▓    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓    ▓ ▓▓▓▓▓ ▓▓▓▓▓▓░    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓▓▓▓  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓ ▓▓▓▓▓▓{boldon}{redfbright}░  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓▓   
+{boldon}{yellowfbright}  ▓▓{boldon}{redfbright}░▓▓▓▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓░▓░{boldon}{yellowfbright}{boldon}{redfbright}▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ▓▓░▓▓▓▓{boldon}{yellowfbright}▓▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓▓▓▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓░▓  ▓▓{boldon}{redfbright}▓▓▓▓▓▓▓▓░▓▓▓▓▓ ▓▓▓▓▓▓░▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓  ▓▓▓▓░▓▓ ░▓ ▓{boldon}{redfbright}▓▓▓▓{boldon}{yellowfbright}▓▓  
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓▓▓▓▓▒▓▓▓{boldon}{yellowfbright}▓▓▓░       ▓░▓{boldon}{redfbright}▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓ ▓▓{boldon}{redfbright}▓▓▓▓▓▓▓▓{boldon}{yellowfbright}▓▓       ▓░▓▓▓     ▓{boldon}{redfbright}▓▓▓▓{boldon}{yellowfbright}▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓ ▓▓▓▓▓{boldon}{yellowfbright}▓▓▓            ▓▓{boldon}{redfbright}▓▓{boldon}{redfbright}▓▓▓{boldon}{yellowfbright}▓▓    ▓▓{boldon}{redfbright}▓▓░▒▓▓{boldon}{yellowfbright}▓▓           ▓▓     ▓{boldon}{redfbright}▓▓░░{boldon}{yellowfbright}▓▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓▓▓{boldon}{yellowfbright} ▓▓░                  ░▓▓░         ▓▓░▓                     ▓{boldon}{redfbright}▓▓▓▓▓{boldon}{yellowfbright}▓   
+{boldon}{yellowfbright}  ▓▓▓{boldon}{redfbright}▓▓▓{boldon}{yellowfbright}▓▓                                                          ░▓{boldon}{redfbright}▓▓▓▓{boldon}{yellowfbright}▓   
+{boldon}{yellowfbright}  ▓▓{boldon}{redfbright}▓{boldon}{yellowfbright}▓▓                                                               ▓{boldon}{redfbright}▓▓░{boldon}{yellowfbright}░   
+{boldon}{yellowfbright}  ░▓▓{boldon}{redfbright}                                                                  {boldon}{yellowfbright} ▒▓{boldon}{redfbright}{boldon}{yellowfbright}▓{reset}
+"""
+
+[colors]
+boldon = "1"
+
+redf = "31"
+greenf = "32"
+yellowf = "33"
+bluef = "34"
+purplef = "35"
+cyanf = "36"
+
+redfbright = "91"
+greenfbright = "92"
+yellowfbright = "93"
+bluefbright = "94"
+cyanfbright = "96"
+purplefbright = "95"
