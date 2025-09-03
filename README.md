@@ -89,10 +89,10 @@ faster than human reaction time, but hey, `colorrs` is still roughly 4x faster e
 Here are some quick comparative benchmark results of execution time measured with the `time` command (on an M4 Macbook Air). Please note
 that this is comparing the `.toml` format of `colorrs` to the shell scripts of `shell-color-scripts`.
 
-|application|random|arch|blocks2|
+|application|random|arch|alpha|
 |--------------|------|----|-------|
-|shell-color-scripts|391.49ms|33.78ms|32.62ms|
-|colorrs|31.31ms|8.82ms|22.93ms|
+|shell-color-scripts|391.49ms|33.78ms|29.93ms|
+|colorrs|31.31ms|8.82ms|9.52ms|
 
 Obviously for printing a specific script, both are very fast. However, for random scripts `colorrs` is significantly faster, and doesn't
 display the notable delay of `shell-color-scripts`.
