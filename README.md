@@ -1,7 +1,4 @@
-# Colorrs
-
-*Warning to those coming from Reddit: I literally just made this this morning, and so far it has only been tested on MacOS. There's no reason it wouldn't
-work on Windows or Linux, but you know how this stuff goes. The code is still a little messy and unit-test free.*
+# colorrs
 
 <img width="1392" height="409" alt="output" src="https://github.com/user-attachments/assets/e815ee96-613e-4c9f-9f43-4c8623bee448" />
 
@@ -58,7 +55,7 @@ Just executes as a subprocess.
 
 *The cool, cross-platform way which gets the chef's recommendation!*
 
-TOML patterns were created with portability in mind and are heavily recommended. They are entirely cross platform as the responsibility for them running is placed on `colorrs`, not the shell. They have also been proven to be faster. In addition, I think they are more comprehensible to users wishing to make modifications, although this may increase the complexity of writing them (especially simple pattern scripts).
+TOML patterns were created with portability in mind and are heavily recommended. They are entirely cross platform as the responsibility for them running is placed on `colorrs`, not the shell. They have also proven to be faster in my experience. In addition, I think they are more comprehensible to users wishing to make modifications, although this may increase the complexity of writing them (especially simple pattern scripts).
 
 A pattern file looks like so:
 
