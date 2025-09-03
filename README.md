@@ -1,17 +1,17 @@
 # Colorrs
 
-*Warning to those coming from Reddit: I literally just made this this morning, and so far it has only been tested on MacOS. There's no reason it wouldn't 
+*Warning to those coming from Reddit: I literally just made this this morning, and so far it has only been tested on MacOS. There's no reason it wouldn't
 work on Windows or Linux, but you know how this stuff goes. The code is still a little messy and unit-test free.*
 
 <img width="1392" height="409" alt="output" src="https://github.com/user-attachments/assets/e815ee96-613e-4c9f-9f43-4c8623bee448" />
 
 Colorrs is a *blazingly fast* 🚀, *completely* ***pointless*** rewrite in Rust 🦀. I kid. I was using [shell-color-scripts](https://gitlab.com/dwt1/shell-color-scripts) in my configuration and found that it was a bit slow at selecting random scripts. As all logical software engineers do, I rewrote it in Rust.
 
-The headline is that (on my machine) it's roughly 10x faster at choosing a random script (around here we call them patterns), and about 4x faster at 
-displaying a pre-selected script. In addition, it's effortlessly cross platform. Instead of relying on shell scripts, it relies on a `.toml` format. Think 
+The headline is that (on my machine) it's roughly 10x faster at choosing a random script (around here we call them patterns), and about 4x faster at
+displaying a pre-selected script. In addition, it's effortlessly cross platform. Instead of relying on shell scripts, it relies on a `.toml` format. Think
 `cowsay` or `figlet` typa deal.
 
-Scripts are easy to port from the original (or you can just use the original scripts, but you'll lose out on a lot of the speed advantage/cross platform-ness). 
+Scripts are easy to port from the original (or you can just use the original scripts, but you'll lose out on a lot of the speed advantage/cross platform-ness).
 
 *Note: On Windows, the application forces ANSI colors instead of using Windows APIs, meaning it isn't compatible with older Windows terminals.*
 
@@ -46,12 +46,12 @@ Options:
 
 ## Patterns
 
-There are two kinds of 'patterns' this program can run. A pattern is what `colorrs` calls both shell color scripts and 
+There are two kinds of 'patterns' this program can run. A pattern is what `colorrs` calls both shell color scripts and
 files written in its TOML format.
 
 ### Scripts
 
-The first kind is just any executable program, e.g. a bash script with the correct shebang. Self-explanatory. 
+The first kind is just any executable program, e.g. a bash script with the correct shebang. Self-explanatory.
 Just executes as a subprocess.
 
 ### TOML
@@ -108,8 +108,8 @@ display the notable delay of `shell-color-scripts`.
 
 ### Portability & Ease
 
-Any pattern written in the `.toml` format *should* run on MacOS, Linux, and Windows. It's a universal format, because 
-`colorrs` acts as the interpretor. In addition, it's my personal opinion that these `.toml` files are easier to read and write 
+Any pattern written in the `.toml` format *should* run on MacOS, Linux, and Windows. It's a universal format, because
+`colorrs` acts as the interpretor. In addition, it's my personal opinion that these `.toml` files are easier to read and write
 than sh/bash scripts, and porting over those scripts is usually super easy.
 
 ## Disadvantages
@@ -124,4 +124,7 @@ ASCII art in different colours require more manual labour.
 - Add better and formatted error handling (STOP PUTTING IT OFF!!!)
 
 ## Contributing
-Please help me convert more of the scripts to `.toml`. I'm begging you. There's like 100 of them. I just. Do not have time. 
+
+Please help me convert more of the scripts to `.toml`. I'm begging you. There's like 100 of them. I just. Do not have time.
+
+Also, see [CONTRIBUTING.md](CONTRIBUTING.md)

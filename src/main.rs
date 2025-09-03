@@ -1,4 +1,5 @@
 use clap::{Arg, Command, command, value_parser};
+use enable_ansi_support::enable_ansi_support;
 use rand::seq::IndexedRandom;
 use std::{
     fmt::Display,
@@ -19,6 +20,11 @@ fn main() {
     let cli = build_cli();
 
     let matches = cli.get_matches_from(wild::args());
+
+    match enable_ansi_support() {
+        Ok(()) => {}
+        Err(e) => eprintln!("Error enabling ANSI support: {}", e),
+    }
 
     // Get the default dir, and use it if there isn't a custom dir defined
     let default_dir = get_pattern_dir().unwrap();
