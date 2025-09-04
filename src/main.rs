@@ -24,8 +24,6 @@ fn main() {
         Err(e) => eprintln!("Error enabling ANSI support: {}", e),
     }
 
-    // Get the default dir, and use it if there isn't a custom dir defined
-
     if let Some(sub) = matches.subcommand_name() {
         // If its the shell generation subcommand, we do that and exit early so we can fetch dir
         // for the rest of the commands to avoid repeating code
