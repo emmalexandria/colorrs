@@ -106,7 +106,7 @@ fn build_cli() -> Command {
         .about("Download patterns from a git repository")
         .long_about("Download patterns from a git repository. These patterns are looked for in the ./patterns or ./colorscripts subdirectories.
 The repository can either be formatted as a full URL, or as <OWNER>/<NAME>, which will be turned into a GitHub url")
-    .arg(Arg::new("repository").num_args(1).required(true));
+    .arg(Arg::new("repository").num_args(1).required(true).long_help("The Git repository to download patterns from. Either an HTTP URL or the owner and name of the repository: <OWNER>/<NAME>. The latter downloads from GitHub."));
 
     command!()
         .subcommand(print)
