@@ -1,12 +1,13 @@
 # colorrs
 
-*Important caveat: In all implementation details, this application should be flawlessly cross-platform. However, I haven't yet had the time 
+*Important caveat: In all implementation details, this application should be flawlessly cross-platform. However, I haven't yet had the time
 to actually boot up VMs to test it.*
 
 <img width="1392" height="409" alt="output" src="https://github.com/user-attachments/assets/e815ee96-613e-4c9f-9f43-4c8623bee448" />
 
-Colorrs is an alternative to [shell-color-scripts](https://gitlab.com/dwt1/shell-color-scripts). This was initially motivated simply by the fact that 
-it can be hellishly slow at picking a random script.
+Colorrs is an alternative to [shell-color-scripts](https://gitlab.com/dwt1/shell-color-scripts). This was initially motivated simply by the fact that
+it can be hellishly slow at picking a random script. If you're unfamiliar, `shell-color-scripts` essentially prints a random
+little image in your terminal showing off your terminal colours.
 
 The headline is that (on my machine) it's much faster at choosing a random script (around here we call them patterns), and about 2-3x faster at
 displaying a pre-selected script. In addition, it's effortlessly cross platform. Instead of relying on shell scripts, it has a `.toml` format for patterns. Think
@@ -18,7 +19,8 @@ The main cost of all this niceness is code complexity and size. `shell-color-scr
 
 *Note: On Windows, the application forces ANSI colors instead of using Windows APIs, meaning it isn't compatible with older Windows terminals.*
 
-## Features 
+## Features
+
 - Linux, MacOS, and Windows support
 - Automatically download patterns from a Git repository and copy them to the appropriate directory
 - Shell completions
@@ -29,14 +31,14 @@ The main cost of all this niceness is code complexity and size. `shell-color-scr
 
 `cargo install colorrs`
 
-Once installed, run `colorrs download emmalexandria/colorrs` to automatically download and install the contents of 
+Once installed, run `colorrs download emmalexandria/colorrs` to automatically download and install the contents of
 the patterns directory. This command works for any Git repository with a `patterns` or `colorscripts` directory.
 
 New pattern files can be created and installed in these default directories.
+
 |Linux/XDG|Windows|MacOS|
 ------|-------|------
 |`$HOME/.config/colorrs`| `C:\Users\{User}\AppData\Roaming\colorrs`| `/Users/{User}/Library/Application Support/colorrs` |
-
 
 ## Usage
 
@@ -79,10 +81,10 @@ files written in its TOML format.
 ### Scripts
 
 The first kind is just any executable program, e.g. a bash script with the correct shebang. Self-explanatory.
-Just executes as a subprocess. Support is included for this to make moving over from `shell-color-scripts` easier. 
+Just executes as a subprocess. Support is included for this to make moving over from `shell-color-scripts` easier.
 
-**N.B. At present no validation is run on these scripts. Any executable in the patterns directory can be 
-executed by `colorrs`. For this reason, don't run `colorrs` with sudo/admin privileges. If it asks for them, something is 
+**N.B. At present no validation is run on these scripts. Any executable in the patterns directory can be
+executed by `colorrs`. For this reason, don't run `colorrs` with sudo/admin privileges. If it asks for them, something is
 up.**
 
 ### TOML
@@ -120,8 +122,9 @@ will apply the ANSI reset sequence. If you *REALLY* need to create a pattern whi
 I'll work out some escaping.
 
 #### Technical details
-This format is implemented with `serde` and `toml`, and a simple find and replace for the defined colors is run, in which `{red}` for example will be 
-replaced by `x1b[31m` wherever it's present. This means that your patterns can actually define any escape sequences you like in `colorrs`, so you can 
+
+This format is implemented with `serde` and `toml`, and a simple find and replace for the defined colors is run, in which `{red}` for example will be
+replaced by `x1b[31m` wherever it's present. This means that your patterns can actually define any escape sequences you like in `colorrs`, so you can
 get creative with it.
 
 ## Advantages
