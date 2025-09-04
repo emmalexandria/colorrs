@@ -156,6 +156,7 @@ ASCII art in different colours require more manual labour.
 
 - Add better error handling (too many unwraps around)
 - Beautify output
+- Add code comments
 
 ## Contributing
 
