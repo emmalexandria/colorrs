@@ -50,7 +50,7 @@ fn main() {
                     .get_one::<bool>("preview")
                     .copied()
                     .unwrap_or(false);
-                let res = list(&dir, preview);
+                list(&dir, preview);
             }
             "download" => {
                 let url = matches
@@ -126,11 +126,6 @@ The repository can either be formatted as a full URL, or as <OWNER>/<NAME>, whic
 }
 
 fn completions_cmd(matches: &ArgMatches) {
-    let shell = matches
-        .subcommand_matches("generate")
-        .unwrap()
-        .get_one::<Shell>("shell")
-        .copied();
     if let Some(generator) = matches
         .subcommand_matches("generate")
         .unwrap()
@@ -141,7 +136,6 @@ fn completions_cmd(matches: &ArgMatches) {
         let output = generate_shell_completions(generator, &mut cmd);
 
         println!("{output}");
-        exit(0)
     }
 }
 
@@ -186,7 +180,7 @@ fn print(dir: &PathBuf, pattern: Option<String>) {
     }
 }
 
-fn list(dir: &PathBuf, preview: bool) -> Result<(), std::io::Error> {
+fn list(dir: &PathBuf, preview: bool) {
     if !dir.exists() {
         eprintln!("Pattern directory {} does not exist", dir.to_string_lossy());
         exit(-1);
@@ -197,7 +191,7 @@ fn list(dir: &PathBuf, preview: bool) -> Result<(), std::io::Error> {
     for file in files {
         let ext = file.extension();
         let filename = file.file_stem().unwrap_or(OsStr::new("")).to_string_lossy();
-        if preview && let Err(e) = print_pattern(&file) {
+        if preview && let Err(_) = print_pattern(&file) {
             eprintln!(
                 "Failed to print preview of {}",
                 file.file_name().unwrap_or_default().to_string_lossy()
@@ -207,8 +201,6 @@ fn list(dir: &PathBuf, preview: bool) -> Result<(), std::io::Error> {
 
         // If file has an extension, print it in brackets. Used to distinguish TOML patterns
     }
-
-    Ok(())
 }
 
 fn print_file(ext: Option<&OsStr>, filename: Cow<'_, str>) {

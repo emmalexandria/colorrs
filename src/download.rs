@@ -1,6 +1,6 @@
 use std::{
     fs,
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use git2::Repository;
@@ -10,7 +10,6 @@ use crate::files::list_dir_files;
 
 #[derive(Debug)]
 pub enum DownloadErrorType {
-    CloneFailed,
     InvalidURL,
     InvalidSubdir,
     TempDirFailure,
@@ -32,7 +31,7 @@ impl DownloadError {
     }
 }
 
-pub fn download_patterns(url: String, pattern_dir: &PathBuf) -> Result<(), DownloadError> {
+pub fn download_patterns(url: String, pattern_dir: &Path) -> Result<(), DownloadError> {
     let normalized = normalize_url(url)?;
 
     let dir = tempdir().map_err(|e| {
@@ -43,7 +42,7 @@ pub fn download_patterns(url: String, pattern_dir: &PathBuf) -> Result<(), Downl
     })?;
 
     println!("Cloning {normalized}");
-    let repo = Repository::clone(&normalized, dir.path()).map_err(|e| {
+    Repository::clone(&normalized, dir.path()).map_err(|e| {
         DownloadError::new(
             DownloadErrorType::InvalidURL,
             format!("Failed to clone git repository with error {e}"),
@@ -80,10 +79,7 @@ pub fn download_patterns(url: String, pattern_dir: &PathBuf) -> Result<(), Downl
     ))
 }
 
-fn copy_contents_to_path(
-    location: &PathBuf,
-    destination: &PathBuf,
-) -> Result<usize, DownloadError> {
+fn copy_contents_to_path(location: &PathBuf, destination: &Path) -> Result<usize, DownloadError> {
     let files = list_dir_files(location).map_err(|e| {
         DownloadError::new(
             DownloadErrorType::IOError,
@@ -93,7 +89,7 @@ fn copy_contents_to_path(
     let mut count = files.len();
     files.iter().for_each(|f| {
         if let Some(name) = f.file_name() {
-            let mut dest = destination.clone();
+            let mut dest = destination.to_path_buf();
 
             dest.push(name);
             if dest.exists() || dest.with_extension("").exists() {
