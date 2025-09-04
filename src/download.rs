@@ -86,6 +86,19 @@ fn copy_contents_to_path(location: &PathBuf, destination: &Path) -> Result<usize
             format!("Failed to read temp directory with error {e}"),
         )
     })?;
+
+    if !destination.exists() {
+        fs::create_dir(destination).map_err(|e| {
+            DownloadError::new(
+                DownloadErrorType::IOError,
+                format!(
+                    "Failed to create colorrs directory at {} with message {e}",
+                    destination.to_string_lossy()
+                ),
+            )
+        })?;
+    }
+
     let mut count = files.len();
     files.iter().for_each(|f| {
         if let Some(name) = f.file_name() {
