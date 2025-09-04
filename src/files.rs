@@ -1,6 +1,6 @@
 use std::{
-    fs, os,
-    path::{Path, PathBuf},
+    fs,
+    path::PathBuf,
 };
 
 pub fn list_dir_files(dir: &PathBuf) -> Result<Vec<PathBuf>, std::io::Error> {

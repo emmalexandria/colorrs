@@ -2,7 +2,7 @@ use clap::{Arg, ArgAction, ArgMatches, Command, command, value_parser};
 use clap_complete::{Generator, Shell, generate};
 use enable_ansi_support::enable_ansi_support;
 use rand::seq::IndexedRandom;
-use std::{borrow::Cow, ffi::OsStr, io::BufWriter, path::PathBuf, process::exit};
+use std::{borrow::Cow, ffi::OsStr, path::PathBuf, process::exit};
 
 use crate::{
     download::download_patterns,
@@ -197,13 +197,11 @@ fn list(dir: &PathBuf, preview: bool) -> Result<(), std::io::Error> {
     for file in files {
         let ext = file.extension();
         let filename = file.file_stem().unwrap_or(OsStr::new("")).to_string_lossy();
-        if preview {
-            if let Err(e) = print_pattern(&file) {
-                eprintln!(
-                    "Failed to print preview of {}",
-                    file.file_name().unwrap_or_default().to_string_lossy()
-                )
-            }
+        if preview && let Err(e) = print_pattern(&file) {
+            eprintln!(
+                "Failed to print preview of {}",
+                file.file_name().unwrap_or_default().to_string_lossy()
+            )
         }
         print_file(ext, filename);
 
@@ -229,14 +227,14 @@ fn select_random(dir: &PathBuf) -> Option<PathBuf> {
     }
 
     let files = list_dir_files(dir).unwrap();
-    if files.len() > 0 {
+    if !files.is_empty() {
         let mut rng = rand::rng();
         let file = files.choose(&mut rng);
 
         return file.cloned();
     }
 
-    return None;
+    None
 }
 
 fn generate_shell_completions<G: Generator>(generator: G, cmd: &mut Command) -> String {
