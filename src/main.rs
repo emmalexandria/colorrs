@@ -35,24 +35,13 @@ fn main() {
         let dir = get_dir(&matches);
         match sub {
             "print" => {
-                let rand_flag = matches
+                let pattern = matches
                     .subcommand_matches("print")
                     .unwrap()
-                    .get_one::<bool>("random")
-                    .copied()
-                    .unwrap_or(false);
+                    .get_one::<String>("name")
+                    .cloned();
 
-                if rand_flag {
-                    random(&dir);
-                } else {
-                    let pattern = matches
-                        .subcommand_matches("print")
-                        .unwrap()
-                        .get_one("name")
-                        .unwrap();
-
-                    print(&dir, pattern);
-                }
+                print(&dir, pattern);
             }
             "list" => {
                 let preview = matches
@@ -62,9 +51,6 @@ fn main() {
                     .copied()
                     .unwrap_or(false);
                 let res = list(&dir, preview);
-            }
-            "random" => {
-                random(&dir);
             }
             "download" => {
                 let url = matches
@@ -106,19 +92,8 @@ fn build_cli() -> Command {
         );
 
     let print = command!("print")
-        .about("Print a given or random pattern")
-        .arg(
-            Arg::new("random")
-                .short('r')
-                .long("random")
-                .help("Choose a random pattern")
-                .action(clap::ArgAction::SetTrue),
-        )
-        .arg(
-            Arg::new("name")
-                .num_args(1)
-                .required_unless_present("random"),
-        );
+        .about("Print the given pattern, or a random pattern if none is supplied")
+        .arg(Arg::new("name").num_args(1).required(false));
 
     let list = command!("list").about("List available patterns").arg(
         Arg::new("preview")
@@ -170,27 +145,42 @@ fn completions_cmd(matches: &ArgMatches) {
     }
 }
 
-fn print(dir: &PathBuf, pattern: &String) {
+fn print(dir: &PathBuf, pattern: Option<String>) {
     if !dir.exists() {
         eprintln!("Pattern directory {} does not exist", dir.to_string_lossy());
         exit(-1);
     }
 
-    let files = list_dir_files(dir).unwrap();
+    let selected_path: Option<PathBuf>;
 
-    let file = files
-        .iter()
-        .find(|f| f.file_stem().unwrap().to_str().unwrap() == pattern);
+    if let Some(p) = pattern {
+        let mut pattern_path = dir.clone();
+        pattern_path.push(&p);
 
-    if let Some(f) = file {
-        let res = print_pattern(f);
-        if res.is_err() {
-            eprintln!("Error printing pattern: {}", res.err().unwrap())
+        if !pattern_path.exists() {
+            pattern_path = pattern_path.with_extension("toml");
         }
+
+        if !pattern_path.exists() {
+            eprintln!(
+                "Pattern file for {} not found in {}",
+                p,
+                dir.to_string_lossy()
+            );
+            return;
+        }
+        selected_path = Some(pattern_path);
+    } else {
+        selected_path = select_random(dir);
+    }
+
+    if let Some(path) = selected_path {
+        if let Err(e) = print_pattern(&path) {
+            eprintln!("Error printing pattern: {}", e)
+        };
     } else {
         eprintln!(
-            "Pattern file for {} not found in {}",
-            pattern,
+            "Failed to select a random path. Are you sure there are paths in ${}?",
             dir.to_string_lossy()
         );
     }
@@ -207,8 +197,13 @@ fn list(dir: &PathBuf, preview: bool) -> Result<(), std::io::Error> {
     for file in files {
         let ext = file.extension();
         let filename = file.file_stem().unwrap_or(OsStr::new("")).to_string_lossy();
-        if (preview) {
-            print_pattern(&file);
+        if preview {
+            if let Err(e) = print_pattern(&file) {
+                eprintln!(
+                    "Failed to print preview of {}",
+                    file.file_name().unwrap_or_default().to_string_lossy()
+                )
+            }
         }
         print_file(ext, filename);
 
@@ -227,20 +222,21 @@ fn print_file(ext: Option<&OsStr>, filename: Cow<'_, str>) {
     println!("{}", filename);
 }
 
-fn random(dir: &PathBuf) {
+fn select_random(dir: &PathBuf) -> Option<PathBuf> {
     if !dir.exists() {
         eprintln!("Pattern directory {} does not exist", dir.to_string_lossy());
         exit(-1);
     }
 
     let files = list_dir_files(dir).unwrap();
-    let mut rng = rand::rng();
-    let file = files.choose(&mut rng).unwrap();
+    if files.len() > 0 {
+        let mut rng = rand::rng();
+        let file = files.choose(&mut rng);
 
-    let res = print_pattern(file);
-    if res.is_err() {
-        eprintln!("Error printing pattern: {}", res.err().unwrap())
+        return file.cloned();
     }
+
+    return None;
 }
 
 fn generate_shell_completions<G: Generator>(generator: G, cmd: &mut Command) -> String {
