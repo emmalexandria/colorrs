@@ -1,44 +1,72 @@
 # colorrs
 
+*Important caveat: In all implementation details, this application should be flawlessly cross-platform. However, I haven't yet had the time 
+to actually boot up VMs to test it.*
+
 <img width="1392" height="409" alt="output" src="https://github.com/user-attachments/assets/e815ee96-613e-4c9f-9f43-4c8623bee448" />
 
-Colorrs is a *blazingly fast* 🚀, *completely* ***pointless*** rewrite in Rust 🦀. I kid. I was using [shell-color-scripts](https://gitlab.com/dwt1/shell-color-scripts) in my configuration and found that it was a bit slow at selecting random scripts. As all logical software engineers do, I rewrote it in Rust.
+Colorrs is an alternative to [shell-color-scripts](https://gitlab.com/dwt1/shell-color-scripts). This was initially motivated simply by the fact that 
+it can be hellishly slow at picking a random script.
 
 The headline is that (on my machine) it's roughly 10x faster at choosing a random script (around here we call them patterns), and about 4x faster at
-displaying a pre-selected script. In addition, it's effortlessly cross platform. Instead of relying on shell scripts, it relies on a `.toml` format. Think
+displaying a pre-selected script. In addition, it's effortlessly cross platform. Instead of relying on shell scripts, it has a `.toml` format for patterns. Think
 `cowsay` or `figlet` typa deal.
 
 Scripts are easy to port from the original (or you can just use the original scripts, but you'll lose out on a lot of the speed advantage/cross platform-ness).
 
 *Note: On Windows, the application forces ANSI colors instead of using Windows APIs, meaning it isn't compatible with older Windows terminals.*
 
+## Features 
+- Linux, MacOS, and Windows support
+- Automatically download patterns from a Git repository and copy them to the appropriate directory
+- Shell completions
+- TOML format offering speed and ease advantages in creating scripts
+- Pattern listing with preview (optional)
+
 ## Installation
 
 `cargo install colorrs`
 
-Once installed, copy the contents of the `patterns` directory to:
+Once installed, run `colorrs download emmalexandria/colorrs` to automatically download and install the contents of 
+the patterns directory. This command works for any Git repository with a `patterns` or `colorscripts` directory.
 
+New pattern files can be created and installed in these default directories.
 |Linux/XDG|Windows|MacOS|
 ------|-------|------
 |`$HOME/.config/colorrs`| `C:\Users\{User}\AppData\Roaming\colorrs`| `/Users/{User}/Library/Application Support/colorrs` |
 
-The `patterns` directory of this repo only contains `.toml` patterns. If you want a wider variety, feel free to drop script patterns from the original
-into your pattern directory.
 
 ## Usage
 
 ```
-A Rust CLI for outputting terminal colour test images
+Usage: colorrs [OPTIONS] <COMMAND>
 
-Usage: colorrs [OPTIONS]
+Commands:
+  print     Print a given or random pattern
+  list      List available patterns
+  download  Download patterns from a git repository
+  generate  Generate completions for a given shell
+  help      Print this message or the help of the given subcommand(s)
 
 Options:
-  -p, --print <PATTERN>  Print the given pattern
-  -r, --random           Choose a random pattern
-  -l, --list             List all available patterns
   -d, --dir <DIRECTORY>  Set a custom directory for pattern description files
   -h, --help             Print help
   -V, --version          Print version
+```
+
+*Usage note: the `-d` flag works across commands. For example, `download` will download to the value of `-d` if set.*
+
+```
+colorrs print <PATTERN>                   print the given pattern
+colorrs print -r                          prints a random pattern
+
+colorrs list                              list available patterns
+colorrs list -p                           list w/ pattern preview
+
+colorrs download <OWNER>/<REPOSITORY>     downloads and install patterns from the given GitHub repo
+colorrs download <URL>                    same as the GitHub ex. but from a provided Git (http) url
+
+colorrs generate <SHELL>                  generates shell completions (bash, Fish, zsh, elvish, Powershell)
 ```
 
 ## Patterns
@@ -49,13 +77,17 @@ files written in its TOML format.
 ### Scripts
 
 The first kind is just any executable program, e.g. a bash script with the correct shebang. Self-explanatory.
-Just executes as a subprocess.
+Just executes as a subprocess. Support is included for this to make moving over from `shell-color-scripts` easier. 
+
+**N.B. At present no validation is run on these scripts. Any executable in the patterns directory can be 
+executed by `colorrs`. For this reason, don't run `colorrs` with sudo/admin privileges. If it asks for them, something is 
+up.**
 
 ### TOML
 
-*The cool, cross-platform way which gets the chef's recommendation!*
+*The cool, cross-platform, chef's special way!*
 
-TOML patterns were created with portability in mind and are heavily recommended. They are entirely cross platform as the responsibility for them running is placed on `colorrs`, not the shell. They have also proven to be faster in my experience. In addition, I think they are more comprehensible to users wishing to make modifications, although this may increase the complexity of writing them (especially simple pattern scripts).
+TOML patterns were created with portability in mind and are heavily recommended for new patterns. They are entirely cross platform as the responsibility for them running is placed on `colorrs`, not the shell. They are generally 4x faster than equivalent shell scripts. In addition, I think they are more comprehensible to users wishing to make modifications, although this may increase the complexity of writing them (especially simple pattern scripts).
 
 A pattern file looks like so:
 
@@ -85,22 +117,27 @@ This TOML format was designed to be really easy to learn, and (vitally) fast to 
 will apply the ANSI reset sequence. If you *REALLY* need to create a pattern which uses the exact string `{reset}`, then make an issue and maybe
 I'll work out some escaping.
 
+#### Technical details
+This format is implemented with `serde` and `toml`, and a simple find and replace for the defined colors is run, in which `{red}` for example will be 
+replaced by `x1b[31m` wherever it's present. This means that your patterns can actually define any escape sequences you like in `colorrs`, so you can 
+get creative with it.
+
 ## Advantages
 
 ### Speed
 
-`colorrs` is much faster than `shell-color-scripts`, especially in selecting a random pattern. For a specific pattern, both are
-faster than human reaction time, but hey, `colorrs` is still roughly 3-4x faster even if you won't notice.
+`colorrs` is faster than `shell-color-scripts`. For a specific pattern, both are
+faster than human reaction time, but hey, `colorrs` is still roughly 2-3x faster with TOML patterns even if you won't notice.
 
 Here are some quick comparative benchmark results of execution time measured with the `time` command (on an M4 Macbook Air). Please note
 that this is comparing the `.toml` format of `colorrs` to the shell scripts of `shell-color-scripts`.
 
 |application|random|arch|alpha|
 |--------------|------|----|-------|
-|shell-color-scripts|~400ms|~30ms|~30ms|
-|colorrs|~30ms|~9ms|~9ms|
+|shell-color-scripts|~40-500(!)ms|~28-35ms|~28-35ms|
+|colorrs|~12-17ms|~12-15ms|~12-15ms|
 
-Obviously for printing a specific script, both are very fast. However, for random scripts `colorrs` is significantly faster, and doesn't
+For printing a specific script both are very fast. However, for random scripts `colorrs` is significantly faster and doesn't
 display the notable delay of `shell-color-scripts`.
 
 ### Portability & Ease
@@ -117,8 +154,8 @@ ASCII art in different colours require more manual labour.
 
 ## Roadmap
 
-- Command which uses `wget` or `curl` to download the pattern files from this repository and put them in the correct place.
-- Add better and formatted error handling (STOP PUTTING IT OFF!!!)
+- Add better error handling (too many unwraps around)
+- Beautify output
 
 ## Contributing
 
