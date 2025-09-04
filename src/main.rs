@@ -35,13 +35,24 @@ fn main() {
         let dir = get_dir(&matches);
         match sub {
             "print" => {
-                let pattern = matches
+                let rand_flag = matches
                     .subcommand_matches("print")
                     .unwrap()
-                    .get_one("name")
-                    .unwrap();
+                    .get_one::<bool>("random")
+                    .copied()
+                    .unwrap_or(false);
 
-                print(&dir, pattern);
+                if rand_flag {
+                    random(&dir);
+                } else {
+                    let pattern = matches
+                        .subcommand_matches("print")
+                        .unwrap()
+                        .get_one("name")
+                        .unwrap();
+
+                    print(&dir, pattern);
+                }
             }
             "list" => {
                 let preview = matches
@@ -103,7 +114,11 @@ fn build_cli() -> Command {
                 .help("Choose a random pattern")
                 .action(clap::ArgAction::SetTrue),
         )
-        .arg(Arg::new("name").num_args(1).required(false));
+        .arg(
+            Arg::new("name")
+                .num_args(1)
+                .required_unless_present("random"),
+        );
 
     let list = command!("list").about("List available patterns").arg(
         Arg::new("preview")
