@@ -14,6 +14,8 @@ displaying a pre-selected script. In addition, it's effortlessly cross platform.
 
 Scripts are easy to port from the original (or you can just use the original scripts, but you'll lose out on a lot of the speed advantage/cross platform-ness).
 
+The main cost of all this niceness is code complexity and size. `shell-color-scripts` has about 91 lines of code. `colorrs` is a mean and lean 1400.
+
 *Note: On Windows, the application forces ANSI colors instead of using Windows APIs, meaning it isn't compatible with older Windows terminals.*
 
 ## Features 
