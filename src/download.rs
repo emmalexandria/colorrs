@@ -1,5 +1,12 @@
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
+
 use git2::Repository;
 use tempfile::tempdir;
+
+use crate::files::list_dir_files;
 
 #[derive(Debug)]
 pub enum DownloadErrorType {
@@ -7,12 +14,13 @@ pub enum DownloadErrorType {
     InvalidURL,
     InvalidSubdir,
     TempDirFailure,
+    IOError,
 }
 
 #[derive(Debug)]
 pub struct DownloadError {
-    e_type: DownloadErrorType,
-    message: String,
+    pub e_type: DownloadErrorType,
+    pub message: String,
 }
 
 impl DownloadError {
@@ -24,7 +32,7 @@ impl DownloadError {
     }
 }
 
-pub fn download_patterns(url: String) -> Result<(), DownloadError> {
+pub fn download_patterns(url: String, pattern_dir: &PathBuf) -> Result<(), DownloadError> {
     let normalized = normalize_url(url)?;
 
     let dir = tempdir().map_err(|e| {
@@ -48,14 +56,62 @@ pub fn download_patterns(url: String) -> Result<(), DownloadError> {
     colorscript_path.push("colorscripts");
 
     if pattern_path.exists() {
-        println!("Pattern path exists");
+        let num = copy_contents_to_path(&pattern_path, pattern_dir)?;
+        println!(
+            "Copied {} patterns to {}",
+            num,
+            pattern_dir.to_string_lossy()
+        );
+        return Ok(());
     }
-
     if colorscript_path.exists() {
-        println!("Colorscript path exists");
+        let num = copy_contents_to_path(&colorscript_path, pattern_dir)?;
+        println!(
+            "Copied {} colorscripts to {}",
+            num,
+            pattern_dir.to_string_lossy()
+        );
+        return Ok(());
     }
 
-    Ok(())
+    Err(DownloadError::new(
+        DownloadErrorType::InvalidSubdir,
+        "No pattern or colorscripts directory found in repository",
+    ))
+}
+
+fn copy_contents_to_path(
+    location: &PathBuf,
+    destination: &PathBuf,
+) -> Result<usize, DownloadError> {
+    let files = list_dir_files(location).map_err(|e| {
+        DownloadError::new(
+            DownloadErrorType::IOError,
+            format!("Failed to read temp directory with error {e}"),
+        )
+    })?;
+    let mut count = files.len();
+    files.iter().for_each(|f| {
+        if let Some(name) = f.file_name() {
+            let mut dest = destination.clone();
+
+            dest.push(name);
+            if dest.exists() || dest.with_extension("").exists() {
+                println!(
+                    "Not copying {} because a pattern with that name is already installed",
+                    name.to_string_lossy()
+                );
+                count -= 1;
+                return;
+            }
+            if let Err(e) = fs::copy(f, dest) {
+                println!("Failed to copy {} with error {e}", name.to_string_lossy());
+                count -= 1;
+            }
+        }
+    });
+
+    Ok(count)
 }
 
 fn normalize_url<S: ToString>(url: S) -> Result<String, DownloadError> {

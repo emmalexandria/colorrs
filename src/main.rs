@@ -62,7 +62,12 @@ fn main() {
                     .get_one::<String>("repository")
                     .cloned()
                     .unwrap();
-                download_patterns(url);
+                if let Err(e) = download_patterns(url, &dir) {
+                    eprintln!(
+                        "Failed to download patterns with the error: \n {}",
+                        e.message
+                    )
+                }
             }
             &_ => {}
         }
