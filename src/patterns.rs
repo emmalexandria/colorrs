@@ -1,19 +1,28 @@
 use std::{
     collections::HashMap,
     fmt::Display,
-    fs::{self, File},
-    io::Read,
+    fs::{self},
     path::{Path, PathBuf},
-    process::Stdio,
 };
 
+#[derive(Debug)]
 pub enum PatternErrorType {
-    InvalidShebang,
     InvalidTOML,
     FileDoesNotExist,
     IOError,
 }
 
+impl Display for PatternErrorType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::InvalidTOML => write!(f, "InvalidTOML"),
+            Self::FileDoesNotExist => write!(f, "FileDoesNotExist"),
+            Self::IOError => write!(f, "IOError"),
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct PatternError {
     e_type: PatternErrorType,
     message: String,
@@ -25,6 +34,12 @@ impl PatternError {
             e_type,
             message: msg.to_string(),
         }
+    }
+}
+
+impl Display for PatternError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}: {}", self.e_type, self.message)
     }
 }
 
@@ -73,9 +88,9 @@ pub fn print_pattern(path: &Path) -> Result<(), PatternError> {
         if let Some(p) = path.extension()
             && p == "toml"
         {
-            print_toml_pattern(path);
+            print_toml_pattern(path)?;
         } else {
-            print_shell_pattern(path);
+            print_shell_pattern(path)?;
         }
     } else {
         return Err(PatternError::new(
@@ -91,7 +106,7 @@ fn print_toml_pattern(path: &Path) -> Result<(), PatternError> {
     let content = fs::read_to_string(path).map_err(|e| {
         PatternError::new(
             PatternErrorType::IOError,
-            format!("Error {} reading {}", e.to_string(), path.to_string_lossy()),
+            format!("Error {} reading {}", e, path.to_string_lossy()),
         )
     })?;
 
