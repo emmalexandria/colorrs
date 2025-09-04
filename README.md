@@ -8,7 +8,7 @@ to actually boot up VMs to test it.*
 Colorrs is an alternative to [shell-color-scripts](https://gitlab.com/dwt1/shell-color-scripts). This was initially motivated simply by the fact that 
 it can be hellishly slow at picking a random script.
 
-The headline is that (on my machine) it's roughly 10x faster at choosing a random script (around here we call them patterns), and about 4x faster at
+The headline is that (on my machine) it's much faster at choosing a random script (around here we call them patterns), and about 2-3x faster at
 displaying a pre-selected script. In addition, it's effortlessly cross platform. Instead of relying on shell scripts, it has a `.toml` format for patterns. Think
 `cowsay` or `figlet` typa deal.
 
