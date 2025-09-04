@@ -5,6 +5,7 @@ use rand::seq::IndexedRandom;
 use std::{borrow::Cow, ffi::OsStr, io::BufWriter, path::PathBuf, process::exit};
 
 use crate::{
+    download::download_patterns,
     files::list_dir_files,
     patterns::{get_pattern_dir, print_pattern},
 };
@@ -54,7 +55,15 @@ fn main() {
             "random" => {
                 random(&dir);
             }
-            "download" => {}
+            "download" => {
+                let url = matches
+                    .subcommand_matches("download")
+                    .unwrap()
+                    .get_one::<String>("repository")
+                    .cloned()
+                    .unwrap();
+                download_patterns(url);
+            }
             &_ => {}
         }
     }
@@ -98,7 +107,11 @@ fn build_cli() -> Command {
             .help("Prints all patterns along with their names")
             .action(ArgAction::SetTrue),
     );
-    let download = command!("download").about("Download patterns from a git repository");
+    let download = command!("download")
+        .about("Download patterns from a git repository")
+        .long_about("Download patterns from a git repository. These patterns are looked for in the ./patterns or ./colorscripts subdirectories.
+The repository can either be formatted as a full URL, or as <OWNER>/<NAME>, which will be turned into a GitHub url")
+    .arg(Arg::new("repository").num_args(1).required(true));
 
     command!()
         .subcommand(print)

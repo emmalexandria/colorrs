@@ -1,12 +1,16 @@
+use git2::Repository;
+use tempfile::tempdir;
+
 #[derive(Debug)]
-enum DownloadErrorType {
-    NoRepository,
+pub enum DownloadErrorType {
+    CloneFailed,
     InvalidURL,
     InvalidSubdir,
+    TempDirFailure,
 }
 
 #[derive(Debug)]
-struct DownloadError {
+pub struct DownloadError {
     e_type: DownloadErrorType,
     message: String,
 }
@@ -22,6 +26,34 @@ impl DownloadError {
 
 pub fn download_patterns(url: String) -> Result<(), DownloadError> {
     let normalized = normalize_url(url)?;
+
+    let dir = tempdir().map_err(|e| {
+        DownloadError::new(
+            DownloadErrorType::TempDirFailure,
+            "Failed to create temporary directory",
+        )
+    })?;
+
+    println!("Cloning {normalized}");
+    let repo = Repository::clone(&normalized, dir.path()).map_err(|e| {
+        DownloadError::new(
+            DownloadErrorType::InvalidURL,
+            format!("Failed to clone git repository with error {e}"),
+        )
+    })?;
+
+    let mut pattern_path = dir.path().to_path_buf();
+    pattern_path.push("patterns");
+    let mut colorscript_path = dir.path().to_path_buf();
+    colorscript_path.push("colorscripts");
+
+    if pattern_path.exists() {
+        println!("Pattern path exists");
+    }
+
+    if colorscript_path.exists() {
+        println!("Colorscript path exists");
+    }
 
     Ok(())
 }
