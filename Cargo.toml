@@ -2,7 +2,7 @@
 [package]
 license = "MIT"
 name = "colorrs"
-version = "1.0.2"
+version = "1.0.3"
 edition = "2024"
 description = "A Rust CLI for outputting terminal colour test images"
 authors = ["Emma Alexandria <emma.jellemabutler@gmail.com>"]
