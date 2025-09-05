@@ -76,12 +76,33 @@ fn make_escape_code(inner: &str) -> String {
     format!("\x1b[{inner}m")
 }
 
+#[cfg(target_family = "windows")]
 pub fn get_pattern_dir() -> Option<PathBuf> {
-    dirs::config_dir().map(|mut path| {
-        path.push("colorrs");
-        path
-    })
+    let appdata_result = std::env::var("APPDATA").ok();
+    if appdata_result.is_none() {
+        return None;
+    }
+
+    let mut base = PathBuf::from(appdata_result.unwrap());
+    base.push("colorrs");
+
+    return Some(base);
 }
+
+#[cfg(target_family = "unix")]
+pub fn get_pattern_dir() -> Option<PathBuf> {
+    let home_dir = std::env::home_dir();
+    if home_dir.is_none() {
+        return None;
+    }
+
+    let mut ret = home_dir.unwrap();
+    ret.push("colorrs");
+
+    return Some(ret);
+}
+
+#[cfg(target_family = "unix")]
 
 pub fn print_pattern(path: &Path) -> Result<(), PatternError> {
     if path.is_file() {
