@@ -38,7 +38,7 @@ New pattern files can be created and installed in these default directories.
 
 |Linux/XDG|Windows|MacOS|
 ------|-------|------
-|`$HOME/.config/colorrs`| `C:\Users\{User}\AppData\Roaming\colorrs`| `/Users/{User}/Library/Application Support/colorrs` |
+|`~/.config/colorrs`| `C:\Users\{User}\AppData\Roaming\colorrs`| `~/.config/colorrs` |
 
 ## Usage
 
