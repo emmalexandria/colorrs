@@ -91,7 +91,18 @@ pub fn get_pattern_dir() -> Option<PathBuf> {
 
 #[cfg(target_family = "unix")]
 pub fn get_pattern_dir() -> Option<PathBuf> {
+    // Default to reading XDG Config
+    let xdg = std::env::var("XDG_CONFIG_HOME");
+
+    if let Ok(path) = xdg {
+        let mut xdg_path = PathBuf::from(path);
+        xdg_path.push("colorrs");
+        return Some(xdg_path);
+    }
+
+    // Otherwise, we append to the home directory
     let home_dir = std::env::home_dir();
+    // If we cant get the home directory, we're SoL
     if home_dir.is_none() {
         return None;
     }
