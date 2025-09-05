@@ -97,7 +97,7 @@ pub fn get_pattern_dir() -> Option<PathBuf> {
     }
 
     let mut ret = home_dir.unwrap();
-    ret.push("colorrs");
+    ret.push(".config/colorrs");
 
     return Some(ret);
 }
