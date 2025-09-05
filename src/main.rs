@@ -1,8 +1,8 @@
-use clap::{Arg, ArgAction, ArgMatches, Command, command, value_parser};
-use clap_complete::{Generator, Shell, generate};
+use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command};
+use clap_complete::{generate, Generator, Shell};
 use enable_ansi_support::enable_ansi_support;
 use rand::seq::IndexedRandom;
-use std::{borrow::Cow, ffi::OsStr, path::PathBuf, process::exit};
+use std::{borrow::Cow, ffi::OsStr, fs, path::PathBuf, process::exit};
 
 use crate::{
     download::download_patterns,
@@ -15,6 +15,11 @@ mod files;
 mod patterns;
 
 fn main() {
+    let dir = get_pattern_dir().unwrap();
+    if !dir.exists() {
+        fs::create_dir(dir);
+    }
+
     let cli = build_cli();
 
     let matches = cli.get_matches_from(wild::args());
