@@ -9,7 +9,6 @@ use std::{
 pub enum PatternErrorType {
     InvalidTOML,
     FileDoesNotExist,
-    IOError,
 }
 
 impl Display for PatternErrorType {
@@ -101,8 +100,6 @@ pub fn get_pattern_dir() -> Option<PathBuf> {
 
     return Some(ret);
 }
-
-#[cfg(target_family = "unix")]
 
 pub fn print_pattern(path: &Path) -> Result<(), PatternError> {
     if path.is_file() {
