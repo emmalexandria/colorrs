@@ -113,8 +113,6 @@ pub fn get_pattern_dir() -> Option<PathBuf> {
     return Some(ret);
 }
 
-#[cfg(target_family = "unix")]
-
 pub fn print_pattern(path: &Path) -> Result<(), PatternError> {
     if path.is_file() {
         if let Some(p) = path.extension()

@@ -3,7 +3,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use git2::Repository;
 use tempfile::tempdir;
 
 use crate::files::list_dir_files;
@@ -14,6 +13,7 @@ pub enum DownloadErrorType {
     InvalidSubdir,
     TempDirFailure,
     IOError,
+    GitFailed,
 }
 
 #[derive(Debug)]
@@ -42,12 +42,33 @@ pub fn download_patterns(url: String, pattern_dir: &Path) -> Result<(), Download
     })?;
 
     println!("Cloning {normalized}");
-    Repository::clone(&normalized, dir.path()).map_err(|e| {
-        DownloadError::new(
-            DownloadErrorType::InvalidURL,
-            format!("Failed to clone git repository with error {e}"),
-        )
-    })?;
+    let git_output = std::process::Command::new("git")
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .args([
+            "clone",
+            &normalized,
+            "--depth",
+            "1",
+            &dir.path().to_string_lossy(),
+        ])
+        .status()
+        .map_err(|e| {
+            DownloadError::new(
+                DownloadErrorType::GitFailed,
+                format!("Error running git {}", e),
+            )
+        })?;
+
+    if !git_output.success() {
+        return Err(DownloadError::new(
+            DownloadErrorType::GitFailed,
+            format!(
+                "Git failed to clone, exited with code {}",
+                git_output.code().unwrap()
+            ),
+        ));
+    }
 
     let mut pattern_path = dir.path().to_path_buf();
     pattern_path.push("patterns");
