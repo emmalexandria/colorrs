@@ -43,7 +43,15 @@ pub fn download_patterns(url: String, pattern_dir: &Path) -> Result<(), Download
 
     println!("Cloning {normalized}");
     let git_output = std::process::Command::new("git")
-        .args(["--depth 1", "clone", &normalized])
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .args([
+            "clone",
+            &normalized,
+            "--depth",
+            "1",
+            &dir.path().to_string_lossy(),
+        ])
         .status()
         .map_err(|e| {
             DownloadError::new(
