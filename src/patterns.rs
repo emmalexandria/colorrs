@@ -9,6 +9,7 @@ use std::{
 pub enum PatternErrorType {
     InvalidTOML,
     FileDoesNotExist,
+    IOError,
 }
 
 impl Display for PatternErrorType {
